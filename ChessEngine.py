@@ -2,7 +2,7 @@
 # 'state' of the chess game. It'll also handle move logic, and it'll keep track of moves.
 
 # The constant state of the board.
-class GameState():
+class GameState:
     def __init__(self):
         # List in a list, to represent the board for ease of use later on.
         self.board = [
@@ -23,14 +23,14 @@ class GameState():
     # 2. The piece takes the space of the end move (so end is now where the piece is)
     def makeMove(self, move):
 
-        if self.board[move.startRow][move.startCol] != "--":
+        if self.board[move.startRow][move.startCol] != "--": # Making sure that a piece was selected
             self.board[move.startRow][move.startCol] = "--"
             self.board[move.endRow][move.endCol] = move.pieceMoved
             self.movelog.append(move)
             self.whiteToMove = not self.whiteToMove
 
 
-class Move():
+class Move:
 
     # key : value
     # Top left is zero in list, but its 8 in chess notation
