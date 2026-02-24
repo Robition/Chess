@@ -26,13 +26,16 @@ def main():
     clock = p.time.Clock()
     screen.fill(p.Color("white"))
     gs = ChessEngine.GameState()
+    validmoves = gs.getValidMoves() # Returns a list of all VALID moves in initial state
+    movestate = False # We want to check for NEW valid moves after we move a piece
     loadImages() # Only done once
     running = True
-    sqselected = () # Keeps track of users clicks
+    sqselected = () # Keeps track of users square clicked
     playerclicks = [] # Two tuples, one for each click spot location (x,y)
 
-    while running:
-        for event in p.event.get():
+    while running: # Per-frame updates - things that happen every frame
+        # Not everything needs to be inside the event. Only stuff that requires constant input checking
+        for event in p.event.get(): # event used for getting mouse clicks and mouse positioning
             if event.type == p.QUIT:
                 running = False
             elif event.type == p.MOUSEBUTTONDOWN:
@@ -47,9 +50,20 @@ def main():
                     playerclicks.append(sqselected)
 
                 if len(playerclicks) == 2:
-                    move = ChessEngine.Move(playerclicks[0], playerclicks[1] , gs.board)
-                    gs.makeMove(move)
+                    move = ChessEngine.Move(playerclicks[0], playerclicks[1] , gs.board) # ONLY place we need to check the boards state.
+                    if move in validmoves: # Checks if the current move is stored in validMoves list when we check.
+                        gs.makeMove(move)
+                        movestate = True # Success! Move worked. Now we need to update the new valid moves.
                     playerclicks = []
+            elif event.type == p.KEYDOWN:
+                if event.key == p.K_r:
+                    gs.undoMove()
+                    playerclicks = []
+                    sqselected = ()
+                    movestate = True
+        if movestate: # Has the moveState changed? Okay now we need updated valid moves
+            validmoves = gs.getValidMoves()
+            movestate = False
 
         drawGameState(screen, gs, sqselected)
         clock.tick(MAX_FPS)
