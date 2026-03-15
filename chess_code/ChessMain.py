@@ -2,7 +2,7 @@
 # displaying GameState Object will occur.
 
 import pygame as p
-from Chess import ChessEngine
+from chess import ChessEngine
 
 WIDTH = HEIGHT = 512
 DIMENSION = 8
@@ -50,7 +50,8 @@ def main():
                     playerclicks.append(sqselected)
 
                 if len(playerclicks) == 2:
-                    move = ChessEngine.Move(playerclicks[0], playerclicks[1] , gs.board) # ONLY place we need to check the boards state.
+                    move = ChessEngine.Move(playerclicks[0], playerclicks[1], gs.board) # ONLY place we need to check the boards state.
+                    print(move.getChessNotation())
                     if move in validmoves: # Checks if the current move is stored in validMoves list when we check.
                         gs.makeMove(move)
                         movestate = True # Success! Move worked. Now we need to update the new valid moves.
@@ -61,7 +62,7 @@ def main():
                     playerclicks = []
                     sqselected = ()
                     movestate = True
-        if movestate: # Has the moveState changed? Okay now we need updated valid moves
+        if movestate: # Has the movestate changed? Okay now we need updated valid moves
             validmoves = gs.getValidMoves()
             movestate = False
 

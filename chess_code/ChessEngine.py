@@ -33,14 +33,16 @@ class GameState:
     # To undo a move:
     # I have the move history stored already. I need to just read that input, pop it off
     def undoMove(self):
-        if self.movelog != 0:
+        if self.movelog:
             move = self.movelog.pop() # Temp list var for the move just removed
             self.board[move.startRow][move.startCol] = move.pieceMoved
             self.board[move.endRow][move.endCol] = move.pieceCaptured
             self.whiteToMove = not self.whiteToMove
 
+    # Valid moves:
+    #
     def getValidMoves(self):
-        return
+        return self.getAllMoves()
 
     '''
     To consider all moves:
@@ -54,12 +56,13 @@ class GameState:
         for rows in range(len(self.board)): # How many rows there are (8)
             for cols in range(len(self.board[rows])): # Counts how many cols there are in each row (8)
                 piece_color = self.board[rows][cols][0] # [w]P
-                if(piece_color == 'w' and self.whiteToMove) and (piece_color == 'b' and not self.whiteToMove): # Find each piece for the players turn
+                if(piece_color == 'w' and self.whiteToMove) or (piece_color == 'b' and not self.whiteToMove): # Find each piece for the players turn
                     piece = self.board[rows][cols][1] # w[P]
                     if piece == 'P':
                         self.getPawnMoves(rows, cols, moves)
                     if piece == 'R':
                         self.getRookMoves(rows, cols, moves)
+        return moves
 
     # Returns all possible
     def getPawnMoves(self, rows, cols, moves):
